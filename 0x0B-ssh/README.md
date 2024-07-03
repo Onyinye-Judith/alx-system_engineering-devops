@@ -1,0 +1,3 @@
+SSH, or secure shell, is a secure protocol and the most common way of safely administering remote servers. Using a number of encryption technologies, SSH provides a mechanism for establishing a cryptographically secured connection between two parties, authenticating each side to the other, and passing commands and output back and forth.
+
+In this guide, we will be examining the underlying encryption techniques that SSH employs and the methods it uses to establish secure connections. This information can be useful for understanding the various layers of encryption and the different steps needed to form a connection and authenticate both parties.
