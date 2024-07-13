@@ -17,8 +17,6 @@ global
     default_backend web_server
     server web01 127.0.0.1:80 check
 
-    And here are the commands to generate the certificate using Certbot:
-
     bash
     sudo certbot certonly --standalone -d (link unavailable) --preferred-challenges dns
     sudo mkdir /etc/haproxy/certs
