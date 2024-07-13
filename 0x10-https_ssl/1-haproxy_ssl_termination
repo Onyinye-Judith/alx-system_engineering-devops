@@ -1,24 +1,4 @@
 #!/usr/bin/env bash
-/etc/haproxy/haproxy.cfg:
+/etc/haproxy/haproxy.cfg
 global
     ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
-
-defaults
-    mode http
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-
-frontend https
-    bind :443 ssl crt /etc/haproxy/certs/(link unavailable).pem
-    option httpchk GET /healthcheck
-    default_backend web_server
-
-backend web_server
-    server web01 127.0.0.1:80 check
-
-And here are the commands to generate the certificate using Certbot:
-
-sudo certbot certonly --standalone -d (link unavailable) --preferred-challenges dns
-sudo mkdir /etc/haproxy/certs
-sudo cp /etc/letsencrypt/live/(link unavailable)/fullchain.pem /etc/haproxy/certs/(link unavailable).pem
