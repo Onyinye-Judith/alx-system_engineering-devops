@@ -1,34 +1,35 @@
 #!/usr/bin/python3
-""" Exporting csv files"""
-import json
+"""
+Using reddit's API
+"""
 import requests
-import sys
+after = None
 
 
-def recurse(subreddit, host_list=[], after="null"):
-    """Read reddit API and return top 10 hotspots """
-    username = 'ledbag123'
-    password = 'Reddit72'
-    user_pass_dict = {'user': username, 'passwd': password, 'api_type': 'json'}
-    headers = {'user-agent': '/u/ledbag123 API Python for Holberton School'}
-    payload = {"limit": "100", "after": after}
-    url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-    client = requests.session()
-    client.headers = headers
-    r = client.get(url, allow_redirects=False, params=payload)
-    if r.status_code == 200:
-        list_titles = r.json()['data']['children']
-        after = r.json()['data']['after']
-        if after is not None:
+def recurse(subreddit, hot_list=[]):
+    """returning top ten post titles recursively"""
+    global after
+    user_agent = {'User-Agent': 'api_advanced-project'}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    parameters = {'after': after}
+    results = requests.get(url, params=parameters, headers=user_agent,
+            allow_redirects=False)
 
-            host_list.append(list_titles[len(host_list)]['data']['title'])
+    if results.status_code == 200:
+        after_data = results.json().get("data").get("after")
+        if after_data is not None:
+            after = after_data
 
-            recurse(subreddit, host_list, after)
+            recurse(subreddit, hot_list)
 
-        else:
+            all_titles = results.json().get("data").get("children")
 
-            return(host_list)
+            for title_ in all_titles:
 
-        else:
+                hot_list.append(title_.get("data").get("title"))
 
-            return(None)
+                return hot_list
+
+            else:
+
+                return (None)
