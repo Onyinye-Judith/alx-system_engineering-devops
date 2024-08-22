@@ -1,0 +1,23 @@
+#!/usr/bin/evn bash
+# Define the Gunicorn command
+GUNICORN_CMD="gunicorn -w 4 -b 0.0.0.0:8000 my_app:app"
+
+# Define the PID file
+PID_FILE="/var/run/gunicorn.pid"
+
+# Check if the PID file exists
+if [ -f "$PID_FILE" ]; then
+  # Get the current PID
+  CURRENT_PID=$(cat "$PID_FILE")
+
+  # Send a SIGUSR2 signal to Gunicorn to reload workers
+  kill -SIGUSR2 "$CURRENT_PID"
+
+  # Wait for 10 seconds to allow workers to finish processing requests
+  sleep 10
+
+  # Send a SIGWINCH signal to Gunicorn to reload the master process
+  kill -SIGWINCH "$CURRENT_PID"
+else
+  echo "Gunicorn is not running"
+fi
